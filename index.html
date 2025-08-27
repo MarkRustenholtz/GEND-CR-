@@ -27,13 +27,10 @@
   .vehicle-card h3 { margin-top:0; color:#2c3e50; }
   .manual-input { width:80px; font-size:1em; padding:4px 6px; }
   textarea { width:100%; min-height:80px; font-family: monospace; font-size:1em; padding:8px; box-sizing:border-box; border-radius:4px; border:1px solid #ccc; resize:vertical; }
-  #btnInstall { display:none; margin:10px auto; background:#3498db; color:#fff; padding:10px 20px; border-radius:6px; font-size:1.1em; }
 </style>
 </head>
 <body>
 <h1>CR Gendarmerie - Moyens / Personnes</h1>
-
-<button id="btnInstall">Ajouter à l'écran d'accueil</button>
 
 <!-- Section Nigend -->
 <section style="text-align:center; margin-bottom:20px;">
@@ -46,7 +43,6 @@
 </section>
 
 <section id="vehiculesSection">
-
   <!-- Carte Train -->
   <div class="vehicle-card" id="trainCard">
     <h3>Train</h3>
@@ -158,7 +154,6 @@
       </div>
     </div>
   </div>
-
 </section>
 
 <hr/>
@@ -184,25 +179,6 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-let deferredPrompt;
-const btnInstall = document.getElementById('btnInstall');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  btnInstall.style.display = 'block';
-});
-
-btnInstall.addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log('Résultat de l\'install :', outcome);
-    deferredPrompt = null;
-    btnInstall.style.display = 'none';
- }
-});
-
 (() => {
   const state = {
     vehicules:{train:0,bus:0,vl:0,pl:0},
@@ -211,7 +187,7 @@ btnInstall.addEventListener('click', async () => {
   };
 
   let saveTimeout=null;
-  let crGenere = false; // Pour empêcher transmission avant génération CR
+  let crGenere = false;
   let nigendValide = false;
 
   function debounceSave(){
@@ -326,7 +302,7 @@ btnInstall.addEventListener('click', async () => {
     .then(response => {
       if (response.ok) {
         alert("Données transmises avec succès au maître !");
-        transmettreBtn.disabled = true; // Bloquer transmission pour éviter doublon
+        transmettreBtn.disabled = true;
       } else {
         alert("Erreur lors de la transmission !");
       }
